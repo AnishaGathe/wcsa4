@@ -1,54 +1,54 @@
 package genericPackage;
 
-import org.testng.ITestContext;
-import org.testng.ITestListener;
-import org.testng.ITestResult;
-import org.testng.Reporter;
+	import org.testng.ITestContext;
+	import org.testng.ITestListener;
+	import org.testng.ITestResult;
+	import org.testng.Reporter;
 
-public class CustomListner extends BaseTest implements ITestListener{
+	public class CustomListner extends BaseTest implements ITestListener{
 
-	private String methodName;
+		@Override
+		public void onTestStart(ITestResult result) {
+			Reporter.log("the test has been starterd",true);
+		}
 
-	@Override
-	public void onTestStart(ITestResult result) {
-		
+		@Override
+		public void onTestSuccess(ITestResult result) {
+			
+		}
+
+		@Override
+		public void onTestFailure(ITestResult result) {
+			String failedMethodname = result.getMethod().getMethodName();
+			Reporter.log(" "+failedMethodname+" is the method which got failed",true);
+			failed(failedMethodname);
+		}
+
+		@Override
+		public void onTestSkipped(ITestResult result) {
+			
+		}
+
+		@Override
+		public void onTestFailedButWithinSuccessPercentage(ITestResult result) {
+			
+		}
+
+		@Override
+		public void onTestFailedWithTimeout(ITestResult result) {
+			
+		}
+
+		@Override
+		public void onStart(ITestContext context) {
+			
+		}
+
+		@Override
+		public void onFinish(ITestContext context) {
+			Reporter.log("the test is completed ",true);
+		}
+
 	}
 
-	@Override
-	public void onTestSuccess(ITestResult result) {
-		
-	}
 
-	@Override
-	public void onTestFailure(ITestResult result) {
-		String method = result.getMethod().getMethodName();
-		Reporter.log("This is"+methodName+"failed method");
-		failed(methodName);
-	}
-
-	@Override
-	public void onTestSkipped(ITestResult result) {
-		
-	}
-
-	@Override
-	public void onTestFailedButWithinSuccessPercentage(ITestResult result) {
-	
-	}
-
-	@Override
-	public void onTestFailedWithTimeout(ITestResult result) {
-		
-	}
-
-	@Override
-	public void onStart(ITestContext context) {
-		
-	}
-
-	@Override
-	public void onFinish(ITestContext context) {
-		
-	}
-
-}

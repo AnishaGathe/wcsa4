@@ -1,84 +1,74 @@
 package genericPackage;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.Duration;
+	import java.io.File;
+	import java.io.IOException;
+	import java.time.Duration;
 
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.Reporter;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
+	import org.openqa.selenium.OutputType;
+	import org.openqa.selenium.TakesScreenshot;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.chrome.ChromeDriver;
+	import org.openqa.selenium.firefox.FirefoxDriver;
+	import org.testng.Reporter;
+	import org.testng.annotations.AfterMethod;
+	import org.testng.annotations.BeforeMethod;
 
-import com.google.common.io.Files;
+	import com.google.common.io.Files;
 
-public class BaseTest implements lAutoconstant{
-	protected static WebDriver driver;
-	
-	@BeforeMethod
-	public void setUp() throws IOException
-	{
-		Flib flib = new Flib();
-		String browservalue = flib.readPropertyData(PROP_PATH, "Browser");
-		String url = flib.readPropertyData(PROP_PATH, "url");
-		if(browservalue.equals("chrome"))
+	public class BaseTest implements IAutoConstant{
+		private static final String CHROME_PATH = null;
+		protected static WebDriver driver;
+		@BeforeMethod
+		public void setUp() throws IOException
 		{
-			System.setProperty(CHROME_KEY, CHROME_VALUE);
-			driver=new ChromeDriver();
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(40));
-			driver.get(url);
-			
-		}
-		else if(browservalue.equals("firefox"))
-		{
-			System.setProperty(GECKO_KEY,GECKO_VALUE);
-			driver=new FirefoxDriver();
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(40));
-			driver.get(url);
-			
-		}
-		else
-		{
-			Reporter.log("enter correct Browser!!,true");
-		}
-		
-	}
-	public void failed(String methodName)
-	{
-		try
-		{
-			TakesScreenshot ts = (TakesScreenshot)driver;
-			File src = ts.getScreenshotAs(OutputType.FILE);
-			File dest = new File("./screenshots"+methodName+".png");
-			Files.copy(src, dest);
-					
-		}
-		catch(Exception e)
-		{
-			
-		}
-	}
-	
-	
-	@AfterMethod
-	public void teardown()
-	{
-		driver.quit();
-	}
-	@BeforeTest
-	public void chromeProperty()
-	{
-		System.setProperty(CHROME_KEY, CHROME_VALUE);
-		
-	}
-	public void firefoxproperty()
-	{
-		System.setProperty(GECKO_KEY,GECKO_VALUE);
-	}
-	
+			Flib flib = new Flib();
+			String browserValue = flib.readPropertyData(PROP_PATH,"browser");
+			String url = flib.readPropertyData(PROP_PATH,"url");
+			if(browserValue.equalsIgnoreCase("chrome"))
+			{
+				System.setProperty(CHROME_KEY,CHROME_PATH);
+				driver=new ChromeDriver();
+				driver.manage().window().maximize();
+				driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(40));
+				driver.get(url);
 
-}
+			}
+
+			else if(browserValue.equalsIgnoreCase("firefox"))
+			{
+				System.setProperty(GECKO_KEY,GECKO_PATH);
+				driver=new FirefoxDriver();
+				driver.manage().window().maximize();
+				driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(40));
+				driver.get(url);
+
+			}
+
+			else
+			{
+				Reporter.log("invalid browser",true);
+			}
+
+
+		}
+
+		public void failed(String methodName)
+		{
+			try{
+				TakesScreenshot ts=(TakesScreenshot)driver;
+				File src = ts.getScreenshotAs(OutputType.FILE);
+				File dest = new File(SCREENSHOT_PATH+methodName+".png");
+				Files.copy(src, dest);
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+
+			@AfterMethod
+			public void tearDown()
+			{
+				driver.quit();
+			}
+
+		}
